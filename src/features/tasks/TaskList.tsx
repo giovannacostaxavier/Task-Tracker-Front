@@ -1,74 +1,99 @@
-import { create } from 'zustand';
-import api from '../../services/api.js';
+import { useEffect, useState } from 'react';
+import { useTaskStore } from './taskStore';
 
-export type Task = {
-  id: string;
-  titulo: string;
-  descricao: string;
-  status: string;
-  user_id: number;
+export const TaskList = () => {
+  const { tasks, loading, error, fetchTasks, addTask, updateTask, removeTask } =
+    useTaskStore();
+
+  const [titulo, setTitulo] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [editandoId, setEditandoId] = useState<string | null>(null);
+  const [tituloEdit, setTituloEdit] = useState('');
+  const [descricaoEdit, setDescricaoEdit] = useState('');
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const handleCriar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!titulo.trim()) return;
+    await addTask(titulo, descricao);
+    setTitulo('');
+    setDescricao('');
+  };
+
+  const iniciarEdicao = (
+    id: string,
+    tituloAtual: string,
+    descricaoAtual: string,
+  ) => {
+    setEditandoId(id);
+    setTituloEdit(tituloAtual);
+    setDescricaoEdit(descricaoAtual);
+  };
+
+  const salvarEdicao = async (id: string) => {
+    await updateTask(id, tituloEdit, descricaoEdit);
+    setEditandoId(null);
+  };
+
+  return (
+    <div>
+      <h2>Minhas Tasks</h2>
+
+      <form onSubmit={handleCriar}>
+        <input
+          type="text"
+          placeholder="Título"
+          value={titulo}
+          onChange={(e) => setTitulo(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Descrição"
+          value={descricao}
+          onChange={(e) => setDescricao(e.target.value)}
+        />
+        <button type="submit">Criar task</button>
+      </form>
+
+      {loading && <p>Carregando...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <ul>
+        {tasks.map((task) => (
+          <li key={task.id}>
+            {editandoId === task.id ? (
+              <>
+                <input
+                  value={tituloEdit}
+                  onChange={(e) => setTituloEdit(e.target.value)}
+                />
+                <input
+                  value={descricaoEdit}
+                  onChange={(e) => setDescricaoEdit(e.target.value)}
+                />
+                <button onClick={() => salvarEdicao(task.id)}>Salvar</button>
+                <button onClick={() => setEditandoId(null)}>Cancelar</button>
+              </>
+            ) : (
+              <>
+                <strong>{task.titulo}</strong> — {task.descricao} ({task.status}
+                )
+                <button
+                  onClick={() =>
+                    iniciarEdicao(task.id, task.titulo, task.descricao)
+                  }
+                >
+                  Editar
+                </button>
+                <button onClick={() => removeTask(task.id)}>Excluir</button>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
-
-type TaskStore = {
-  tasks: Task[];
-  loading: boolean;
-  error: string | null;
-
-  fetchTasks: () => Promise<void>;
-  addTask: (titulo: string, descricao: string) => Promise<void>;
-  updateTask: (id: string, titulo: string, descricao: string) => Promise<void>;
-  removeTask: (id: string) => Promise<void>;
-};
-
-export const useTaskStore = create<TaskStore>((set, get) => ({
-  tasks: [],
-  loading: false,
-  error: null,
-
-  fetchTasks: async () => {
-    set({ loading: true, error: null });
-    try {
-      const { data } = await api.get<Task[]>('/tasks');
-      set({ tasks: data, loading: false });
-    } catch {
-      set({ error: 'Erro ao carregar tasks', loading: false });
-    }
-  },
-
-  addTask: async (titulo, descricao) => {
-    set({ error: null });
-    try {
-      const { data } = await api.post<Task>('/tasks', { titulo, descricao });
-      set({ tasks: [...get().tasks, data] });
-    } catch {
-      set({ error: 'Erro ao criar task' });
-    }
-  },
-
-  updateTask: async (id, titulo, descricao) => {
-    set({ error: null });
-    try {
-      const { data } = await api.put<Task>(`/tasks/${id}`, {
-        titulo,
-        descricao,
-      });
-      set({
-        tasks: get().tasks.map((t) => (t.id === id ? data : t)),
-      });
-    } catch {
-      set({ error: 'Erro ao editar task' });
-    }
-  },
-
-  removeTask: async (id) => {
-    set({ error: null });
-    try {
-      await api.delete(`/tasks/${id}`);
-      set({
-        tasks: get().tasks.filter((t) => t.id !== id),
-      });
-    } catch {
-      set({ error: 'Erro ao excluir task' });
-    }
-  },
-}));
