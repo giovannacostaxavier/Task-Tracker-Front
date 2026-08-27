@@ -94,7 +94,7 @@ npm run build
 
 ## Backend
 
-Este frontend consome a [Task Tracker API](#) — Node.js, Express, PostgreSQL e autenticação via JWT. Consulta o README desse repositório para instruções completas de instalação e configuração.
+Este frontend consome a [Task Tracker API](https://github.com/giovannacostaxavier/Task-Traker-Back) — Node.js, Express, PostgreSQL e autenticação via JWT. Consulta o README desse repositório para instruções completas de instalação e configuração.
 
 Resumo dos endpoints usados por este frontend:
 
