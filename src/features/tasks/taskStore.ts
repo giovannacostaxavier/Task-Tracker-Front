@@ -1,13 +1,6 @@
 import { create } from 'zustand';
-import api from '../../services/api.js';
-
-export type Task = {
-  id: string;
-  titulo: string;
-  descricao: string;
-  status: string;
-  user_id: number;
-};
+import * as taskService from './taskService';
+import type { Task, TaskFormData } from './schemas';
 
 type TaskStore = {
   tasks: Task[];
@@ -15,8 +8,8 @@ type TaskStore = {
   error: string | null;
 
   fetchTasks: () => Promise<void>;
-  addTask: (titulo: string, descricao: string) => Promise<void>;
-  updateTask: (id: string, titulo: string, descricao: string) => Promise<void>;
+  addTask: (data: TaskFormData) => Promise<void>;
+  updateTask: (id: string, data: TaskFormData) => Promise<void>;
   removeTask: (id: string) => Promise<void>;
 };
 
@@ -28,32 +21,29 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   fetchTasks: async () => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get<Task[]>('/tasks');
-      set({ tasks: data, loading: false });
+      const tasks = await taskService.fetchTasks();
+      set({ tasks, loading: false });
     } catch {
       set({ error: 'Erro ao carregar tasks', loading: false });
     }
   },
 
-  addTask: async (titulo, descricao) => {
+  addTask: async (data) => {
     set({ error: null });
     try {
-      const { data } = await api.post<Task>('/tasks', { titulo, descricao });
-      set({ tasks: [...get().tasks, data] });
+      const novaTask = await taskService.createTask(data);
+      set({ tasks: [...get().tasks, novaTask] });
     } catch {
       set({ error: 'Erro ao criar task' });
     }
   },
 
-  updateTask: async (id, titulo, descricao) => {
+  updateTask: async (id, data) => {
     set({ error: null });
     try {
-      const { data } = await api.put<Task>(`/tasks/${id}`, {
-        titulo,
-        descricao,
-      });
+      const taskAtualizada = await taskService.updateTask(id, data);
       set({
-        tasks: get().tasks.map((t) => (t.id === id ? data : t)),
+        tasks: get().tasks.map((t) => (t.id === id ? taskAtualizada : t)),
       });
     } catch {
       set({ error: 'Erro ao editar task' });
@@ -63,10 +53,8 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   removeTask: async (id) => {
     set({ error: null });
     try {
-      await api.delete(`/tasks/${id}`);
-      set({
-        tasks: get().tasks.filter((t) => t.id !== id),
-      });
+      await taskService.deleteTask(id);
+      set({ tasks: get().tasks.filter((t) => t.id !== id) });
     } catch {
       set({ error: 'Erro ao excluir task' });
     }
