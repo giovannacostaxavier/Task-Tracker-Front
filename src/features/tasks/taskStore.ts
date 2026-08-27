@@ -11,6 +11,7 @@ type TaskStore = {
   addTask: (data: TaskFormData) => Promise<void>;
   updateTask: (id: string, data: TaskFormData) => Promise<void>;
   removeTask: (id: string) => Promise<void>;
+  moveTask: (id: string, status: string) => Promise<void>;
 };
 
 export const useTaskStore = create<TaskStore>((set, get) => ({
@@ -57,6 +58,17 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       set({ tasks: get().tasks.filter((t) => t.id !== id) });
     } catch {
       set({ error: 'Erro ao excluir task' });
+    }
+  },
+  moveTask: async (id, status) => {
+    set({ error: null });
+    try {
+      const taskAtualizada = await taskService.updateTaskStatus(id, status);
+      set({
+        tasks: get().tasks.map((t) => (t.id === id ? taskAtualizada : t)),
+      });
+    } catch {
+      set({ error: 'Erro ao mover task' });
     }
   },
 }));
