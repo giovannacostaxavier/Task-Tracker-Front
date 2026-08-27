@@ -4,8 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { taskSchema, type TaskFormData, type Task } from '../schemas';
 import { useTaskStore } from '../taskStore';
 
-type TaskItemProps = {
+type TaskCardProps = {
   task: Task;
+  proximoStatus?: string;
+  anteriorStatus?: string;
 };
 
 const statusBorder: Record<string, string> = {
@@ -14,16 +16,15 @@ const statusBorder: Record<string, string> = {
   done: 'border-l-status-done',
 };
 
-const statusLabel: Record<string, string> = {
-  todo: 'To Do',
-  doing: 'Doing',
-  done: 'Done',
-};
-
-export const TaskItem = ({ task }: TaskItemProps) => {
+export const TaskCard = ({
+  task,
+  proximoStatus,
+  anteriorStatus,
+}: TaskCardProps) => {
   const [editando, setEditando] = useState(false);
   const updateTask = useTaskStore((state) => state.updateTask);
   const removeTask = useTaskStore((state) => state.removeTask);
+  const moveTask = useTaskStore((state) => state.moveTask);
 
   const {
     register,
@@ -49,12 +50,12 @@ export const TaskItem = ({ task }: TaskItemProps) => {
   if (editando) {
     return (
       <li
-        className={`rounded-md border border-hairline border-l-4 ${borderClass} bg-surface p-4`}
+        className={`rounded-md border border-hairline border-l-4 ${borderClass} bg-surface p-3`}
       >
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
           <input
             {...register('titulo')}
-            className="w-full rounded-md border border-hairline bg-bg px-3 py-2 text-sm text-ink outline-none focus:border-accent"
+            className="w-full rounded-md border border-hairline bg-bg px-2 py-1.5 text-sm text-ink outline-none focus:border-accent"
           />
           {errors.titulo && (
             <span className="text-xs text-status-doing">
@@ -63,7 +64,7 @@ export const TaskItem = ({ task }: TaskItemProps) => {
           )}
           <input
             {...register('descricao')}
-            className="w-full rounded-md border border-hairline bg-bg px-3 py-2 text-sm text-ink outline-none focus:border-accent"
+            className="w-full rounded-md border border-hairline bg-bg px-2 py-1.5 text-sm text-ink outline-none focus:border-accent"
           />
           {errors.descricao && (
             <span className="text-xs text-status-doing">
@@ -73,14 +74,14 @@ export const TaskItem = ({ task }: TaskItemProps) => {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="rounded-md bg-accent px-3 py-1.5 text-sm text-white hover:opacity-90"
+              className="rounded-md bg-accent px-3 py-1 text-xs text-white hover:opacity-90"
             >
               Salvar
             </button>
             <button
               type="button"
               onClick={() => setEditando(false)}
-              className="rounded-md border border-hairline px-3 py-1.5 text-sm text-ink-muted hover:border-accent"
+              className="rounded-md border border-hairline px-3 py-1 text-xs text-ink-muted hover:border-accent"
             >
               Cancelar
             </button>
@@ -92,26 +93,40 @@ export const TaskItem = ({ task }: TaskItemProps) => {
 
   return (
     <li
-      className={`rounded-md border border-hairline border-l-4 ${borderClass} bg-surface p-4 transition hover:border-accent`}
+      className={`rounded-md border border-hairline border-l-4 ${borderClass} bg-surface p-3 transition hover:border-accent`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="font-medium text-ink">{task.titulo}</p>
-          <p className="mt-1 text-sm text-ink-muted">{task.descricao}</p>
-          <span className="mt-2 inline-block font-mono text-xs uppercase tracking-wide text-ink-muted">
-            {statusLabel[task.status] ?? task.status}
-          </span>
+      <p className="text-sm font-medium text-ink">{task.titulo}</p>
+      <p className="mt-1 text-xs text-ink-muted">{task.descricao}</p>
+
+      <div className="mt-3 flex items-center justify-between">
+        <div className="flex gap-2">
+          {anteriorStatus && (
+            <button
+              onClick={() => moveTask(task.id, anteriorStatus)}
+              className="rounded-md border border-hairline px-2 py-1 text-xs text-ink-muted hover:border-accent"
+            >
+              ← Voltar
+            </button>
+          )}
+          {proximoStatus && (
+            <button
+              onClick={() => moveTask(task.id, proximoStatus)}
+              className="rounded-md bg-accent px-2 py-1 text-xs text-white hover:opacity-90"
+            >
+              Avançar →
+            </button>
+          )}
         </div>
-        <div className="flex shrink-0 gap-2">
+        <div className="flex gap-2">
           <button
             onClick={iniciarEdicao}
-            className="text-sm text-ink-muted hover:text-accent"
+            className="text-xs text-ink-muted hover:text-accent"
           >
             Editar
           </button>
           <button
             onClick={() => removeTask(task.id)}
-            className="text-sm text-ink-muted hover:text-status-doing"
+            className="text-xs text-ink-muted hover:text-status-doing"
           >
             Excluir
           </button>
