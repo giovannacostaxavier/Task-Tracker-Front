@@ -19,3 +19,7 @@ export const updateTask = async (id: string, data: TaskFormData) => {
 export const deleteTask = async (id: string) => {
   await api.delete(`/tasks/${id}`);
 };
+export const updateTaskStatus = async (id: string, status: string) => {
+  const response = await api.patch<Task>(`/tasks/${id}/status`, { status });
+  return response.data;
+};
