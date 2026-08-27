@@ -3,6 +3,7 @@ import LoginPage from '../features/auth/LoginPage';
 import RegisterPage from '../features/auth/RegisterPage';
 import PrivateRoute from './PrivateRoute';
 import { TaskList } from '../features/tasks/TaskList';
+import { KanbanBoard } from '../features/kanban/KanbanBoard';
 
 export const AppRoutes = () => (
   <BrowserRouter>
@@ -12,6 +13,7 @@ export const AppRoutes = () => (
 
       <Route element={<PrivateRoute />}>
         <Route path="/tasks" element={<TaskList />} />
+        <Route path="/kanban" element={<KanbanBoard />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
