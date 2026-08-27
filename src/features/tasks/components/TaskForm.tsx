@@ -21,16 +21,44 @@ export const TaskForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <input type="text" placeholder="Título" {...register('titulo')} />
-        {errors.titulo && <span>{errors.titulo.message}</span>}
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-3 rounded-md border border-hairline bg-surface p-4 sm:flex-row sm:items-start"
+    >
+      <div className="flex-1">
+        <input
+          type="text"
+          placeholder="Título"
+          {...register('titulo')}
+          className="w-full rounded-md border border-hairline bg-bg px-3 py-2 text-sm text-ink outline-none focus:border-accent"
+        />
+        {errors.titulo && (
+          <span className="mt-1 block text-xs text-status-doing">
+            {errors.titulo.message}
+          </span>
+        )}
       </div>
-      <div>
-        <input type="text" placeholder="Descrição" {...register('descricao')} />
-        {errors.descricao && <span>{errors.descricao.message}</span>}
+
+      <div className="flex-1">
+        <input
+          type="text"
+          placeholder="Descrição"
+          {...register('descricao')}
+          className="w-full rounded-md border border-hairline bg-bg px-3 py-2 text-sm text-ink outline-none focus:border-accent"
+        />
+        {errors.descricao && (
+          <span className="mt-1 block text-xs text-status-doing">
+            {errors.descricao.message}
+          </span>
+        )}
       </div>
-      <button type="submit">Criar task</button>
+
+      <button
+        type="submit"
+        className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+      >
+        Criar task
+      </button>
     </form>
   );
 };
