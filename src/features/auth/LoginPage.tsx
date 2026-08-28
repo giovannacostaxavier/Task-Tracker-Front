@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { loginSchema, type LoginFormData } from './schemas';
 import { loginUser } from './authService';
 import { useAuthStore } from './authStore';
@@ -75,6 +75,16 @@ const LoginPage = () => {
             Entrar
           </button>
         </form>
+
+        <p className="mt-4 text-center text-sm text-ink-muted">
+          Não tens conta?{' '}
+          <Link
+            to="/cadastro"
+            className="font-medium text-accent hover:underline"
+          >
+            Cadastra-te
+          </Link>
+        </p>
       </div>
     </div>
   );

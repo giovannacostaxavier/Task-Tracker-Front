@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { cadastroSchema, type CadastroFormData } from './schemas';
 import { cadastroUser } from './authService';
 
@@ -93,6 +93,13 @@ const RegisterPage = () => {
             Cadastrar
           </button>
         </form>
+
+        <p className="mt-4 text-center text-sm text-ink-muted">
+          Já tens conta?{' '}
+          <Link to="/login" className="font-medium text-accent hover:underline">
+            Entra
+          </Link>
+        </p>
       </div>
     </div>
   );
