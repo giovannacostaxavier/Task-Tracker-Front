@@ -6,7 +6,7 @@ A aplicação consome uma API REST desenvolvida com Node.js, Express e PostgreSQ
 
 🔗 **Backend:** [Task-Tracker-Back](https://github.com/giovannacostaxavier/Task-Tracker-Back)
 <br>
-🚀 **Projeto online:** [Acessar aplicação](https://task-traker-front.vercel.app/)
+🚀 **Projeto online:** [Acessar aplicação](https://projeto-task-tracker-front.vercel.app/)
 
 <br>
 
