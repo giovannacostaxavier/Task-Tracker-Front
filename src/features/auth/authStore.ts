@@ -9,6 +9,7 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
+  //tipagem da funcao <AuthState>()
   persist(
     (set) => ({
       token: null,
@@ -17,8 +18,12 @@ export const useAuthStore = create<AuthState>()(
       logout: () => set({ token: null, isAuthenticated: false }),
     }),
     {
-      name: 'auth-storage',
+      //configuracao de persistencia
+      name: 'auth-storage', //nome que fica salvo no localStorage
       storage: createJSONStorage(() => localStorage),
+      // usa o localStorage como mecanismo de armazenamento
     },
   ),
 );
+
+/*IMPORTANTE: esse codigo pode ser reutilizado para outros projetos que precisem de guardar o token e se o usuario esta logado ou nao no localStorage com persistencia, precisando de algumas adaptacoes a depender da proposta*/
