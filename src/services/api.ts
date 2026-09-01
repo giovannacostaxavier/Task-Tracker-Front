@@ -18,10 +18,10 @@ api.interceptors.response.use(
   (response) => response, // Função caso dê tudo certo
   (error) => { // função caso dê erro
     if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
-      window.location.href = '/login';
+      useAuthStore.getState().logout(); // Se der erro chama o logout
+      window.location.href = '/login'; // Atualiza realmente a pagina toda 
     }
-    return Promise.reject(error);
+    return Promise.reject(error); // Rejeito mesmo a promisse pra deixar claro que o erro nao foi resolvido
   },
 );
 
