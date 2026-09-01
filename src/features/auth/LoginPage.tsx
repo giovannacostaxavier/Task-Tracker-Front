@@ -6,7 +6,7 @@ import { loginUser } from './authService';
 import { useAuthStore } from './authStore';
 
 const LoginPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook da biblioteca react-router-dom
   const login = useAuthStore((state) => state.login);
 
   const {
