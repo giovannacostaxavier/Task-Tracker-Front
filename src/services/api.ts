@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 }); // Define o endereço do backend uma unica vez 
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => { 
   const { token } = useAuthStore.getState();
 
   if (token) {
@@ -13,7 +13,7 @@ api.interceptors.request.use((config) => {
   }
 
   return config;
-});
+}); // Adiciona o token automaticamente em cada pedido
 api.interceptors.response.use(
   (response) => response,
   (error) => {
