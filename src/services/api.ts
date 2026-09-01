@@ -3,7 +3,7 @@ import { useAuthStore } from '../features/auth/authStore';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-});
+}); // Define o endereço do backend uma unica vez 
 
 api.interceptors.request.use((config) => {
   const { token } = useAuthStore.getState();
