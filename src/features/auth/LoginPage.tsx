@@ -1,7 +1,7 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form'; // Lib que gere o estado de formularios 
+import { zodResolver } from '@hookform/resolvers/zod'; //ponte que liga o Zod (validação) ao react-hook-form
 import { useNavigate, Link } from 'react-router-dom';
-import { loginSchema, type LoginFormData } from './schemas';
+import { loginSchema, type LoginFormData } from './schemas'; //o schema de validação e o tipo
 import { loginUser } from './authService';
 import { useAuthStore } from './authStore';
 
