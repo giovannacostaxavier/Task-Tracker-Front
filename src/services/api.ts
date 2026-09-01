@@ -15,8 +15,8 @@ api.interceptors.request.use((config) => {
   return config;
 }); // Adiciona o token automaticamente em cada pedido
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  (response) => response, // Função caso dê tudo certo
+  (error) => { // função caso dê erro
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
       window.location.href = '/login';
