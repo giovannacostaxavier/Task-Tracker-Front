@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'; // Lib que gere o estado de formularios 
+import { useForm } from 'react-hook-form'; // Lib que gere o estado de formularios
 import { zodResolver } from '@hookform/resolvers/zod'; //ponte que liga o Zod (validação) ao react-hook-form
 import { useNavigate, Link } from 'react-router-dom';
 import { loginSchema, type LoginFormData } from './schemas'; //o schema de validação e o tipo
@@ -8,19 +8,21 @@ import { useAuthStore } from './authStore';
 const LoginPage = () => {
   const navigate = useNavigate(); // Hook da biblioteca react-router-dom
   const login = useAuthStore((state) => state.login);
-
+  /*Esse state é o selector que ja vem nativo com todas as informacoes dessa funcao, e estamos pegando so a parte que interessa no caso o LOGIN */
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
+    //Oegando oque nos interessa do objeto useForm
+    register, // register('email'): conecta este input ao estado do formulário
+    handleSubmit, //valida os dados com o Zod antes de chamar onSubmit; bloqueia o submit se houver erro
+    formState: { errors }, //objeto com as mensagens de erro de validação de cada campo, indexado pelo nome do campo
   } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema), //usa o ZOD com as regras do loginSchema para validar
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    //funcao que vai ser chamada no onsubmit
     try {
-      const { token } = await loginUser(data);
-      login(token);
+      const { token } = await loginUser(data); // Destructuring do token qe vem de loginUser(data)
+      login(token); //Guarda o token no store
       navigate('/tasks');
     } catch (error) {
       console.error(error);
@@ -41,7 +43,7 @@ const LoginPage = () => {
             <input
               id="email"
               type="email"
-              {...register('email')}
+              {...register('email')} // Nome identico ao da propriedade do loginSchema
               className="mt-1 w-full rounded-md border border-hairline bg-bg px-3 py-2 text-sm text-ink outline-none focus:border-accent"
             />
             {errors.email && (
@@ -58,7 +60,7 @@ const LoginPage = () => {
             <input
               id="senha"
               type="password"
-              {...register('senha')}
+              {...register('senha')} //// Nome identico ao da propriedade do loginSchema
               className="mt-1 w-full rounded-md border border-hairline bg-bg px-3 py-2 text-sm text-ink outline-none focus:border-accent"
             />
             {errors.senha && (
