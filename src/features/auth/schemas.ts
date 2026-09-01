@@ -12,4 +12,5 @@ export const cadastroSchema = z.object({
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
+/*z.infer é uma funcionalidade do ZOD que gera automaticamente um tipo TypeScript, ou seja ele sabe que tipo é aquele dado e ja tipa automaticamente sem voce precisar fazer isso */
 export type CadastroFormData = z.infer<typeof cadastroSchema>;
