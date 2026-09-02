@@ -5,9 +5,9 @@ export const taskSchema = z.object({
   descricao: z.string().min(1, 'A descrição é obrigatória'),
 });
 
-export type TaskFormData = z.infer<typeof taskSchema>;
+export type TaskFormData = z.infer<typeof taskSchema>; // Usamos z.infer para tipar dados que precisam de validacao
 
-export type Task = {
+export type Task = { // usamos type para tipar dados que nao precisam de validacao ou vem de um lugar que vc confia como do back por exemplo
   id: string;
   titulo: string;
   descricao: string;
