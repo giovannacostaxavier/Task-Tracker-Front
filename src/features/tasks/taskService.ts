@@ -23,3 +23,5 @@ export const updateTaskStatus = async (id: string, status: string) => {
   const response = await api.patch<Task>(`/tasks/${id}/status`, { status });
   return response.data;
 };
+
+// Chamada às rotas TASKS
