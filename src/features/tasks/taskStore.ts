@@ -16,7 +16,7 @@ type TaskStore = {
 
 export const useTaskStore = create<TaskStore>((set, get) => ({
   tasks: [],
-  loading: false,
+  loading: false, // Estados iniciais 
   error: null,
 
   fetchTasks: async () => {
