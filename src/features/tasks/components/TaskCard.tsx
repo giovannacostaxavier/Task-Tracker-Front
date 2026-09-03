@@ -15,6 +15,7 @@ const statusBorder: Record<string, string> = {
   doing: 'border-l-status-doing',
   done: 'border-l-status-done',
 };
+/*Cria um "dicionário" que traduz cada status da task (todo, doing, done) na classe Tailwind de cor correspondente*/
 
 export const TaskCard = ({
   task,
