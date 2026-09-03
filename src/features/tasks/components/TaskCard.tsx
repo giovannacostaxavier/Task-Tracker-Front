@@ -21,7 +21,7 @@ export const TaskCard = ({
   task,
   proximoStatus,
   anteriorStatus,
-}: TaskCardProps) => {
+}: TaskCardProps) => { // Tipagem das props que foram declaradas no type la em cima 
   const [editando, setEditando] = useState(false);
   const updateTask = useTaskStore((state) => state.updateTask);
   const removeTask = useTaskStore((state) => state.removeTask);
